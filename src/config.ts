@@ -11,7 +11,13 @@ const svgWidth = 72 * (60 / 15 * 2.5) + globalChartMarginLeft + globalChartMargi
 
 const meteoBeUrlTemplate = 'https://opendata.meteo.be/ftp/observations/radar/vbird/{odimCode}/{yyyy}/{odimCode}_vpts_{yyyymmdd}.txt'
 const aloftNexradUrl = "https://s3.us-east-1.amazonaws.com/birdcastdata/nexrad/daily/{odimCode}/{yyyy}/{odimCode}_vpts_{yyyymmdd}.csv"
-const availableHeights = [0, 200, 400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000, 2200, 2400, 2600, 2800, 3000, 3200, 3400, 3600, 3800, 4000, 4200, 4400, 4600, 4800];
+const availableHeights = [
+  0, 100, 200, 300, 400, 500, 600, 700, 800, 900,
+  1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900,
+  2000, 2100, 2200, 2300, 2400, 2500, 2600, 2700, 2800, 2900,
+  3000, 3100, 3200, 3300, 3400, 3500, 3600, 3700, 3800, 3900,
+  4000, 4100, 4200, 4300, 4400, 4500, 4600, 4700, 4800
+];
 
 export default {
   availableLanguages: [

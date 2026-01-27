@@ -597,23 +597,34 @@ export default Vue.extend({
       });
     },
 
-    /* Store a Vpts data row originating in a file into vptsData */
-    storeDataRow(vptsDataRow: VPTSDataRowFromFile): void {
-      const objToStore = { ...vptsDataRow, ...{ noData: false } };
-
-      if ( // no (datetime) slot = data not copied. Allow automatic downsampling.
-        Object.prototype.hasOwnProperty.call(
-          this.radarVpts,
-          vptsDataRow.datetime
-        )
-      ) {
-          this.$set(
-            this.radarVpts[vptsDataRow.datetime].heightData,
-            vptsDataRow.height,
-            objToStore
-          );
-      }
+  snapToAppGridMs(tsMs: number): number {
+      const stepMs = this.appTemporalResolution * 1000; // appTemporalResolution is seconds
+      return Math.floor(tsMs / stepMs) * stepMs;        // floor to grid
     },
+
+
+    /* Store a Vpts data row originating in a file into vptsData */
+/* Store a Vpts data row originating in a file into vptsData */
+    storeDataRow(vptsDataRow: VPTSDataRowFromFile): void {
+      const snapped = this.snapToAppGridMs(vptsDataRow.datetime);
+
+      if (!Object.prototype.hasOwnProperty.call(this.radarVpts, snapped)) {
+        return;
+      }
+
+      const objToStore = {
+        ...vptsDataRow,
+        datetime: snapped, // keep consistent with the slot key
+        noData: false
+      };
+
+      this.$set(
+        this.radarVpts[snapped].heightData,
+        vptsDataRow.height,
+        objToStore
+      );
+    },
+
 
     getDatesForData(startMoment: moment.Moment, stopMoment: moment.Moment): string[] {
       // List the dates for which we'll need to load the data (according to startMoment and stopMoment)
@@ -644,6 +655,10 @@ export default Vue.extend({
         const url = helpers.buildVpTsDataUrl(radar, moment(currentDate, "YYYY-MM-DD"));
         this.filesLoadingCount++;
         axios.get(url).then(response => {
+          console.log("[VPTS] url", url, "bytes", JSON.stringify(response.data)?.length ?? "n/a");
+          const parsed = helpers.parseVpts(response.data, radar.vptsFileFormat);
+          console.log("[VPTS] parsed rows", parsed.length, "sample", parsed[10]);
+
           // Data are floored to resolution of app (`parseVol2birdVpts()`), which can create multiple entries with the same datetime index
           // In this section:
           //  1/ Data are grouped per datetime (e.g. 10min app resolution and 5min data resolution => all heights occur twice)

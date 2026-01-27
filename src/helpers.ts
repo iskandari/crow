@@ -6,7 +6,7 @@ import config from "./config";
 
 import { rgb, RGBColor } from "d3-color";
 
-const SD_VVP_THRESHOLD = 2; // VPTS data with sd_vvp < sdVpp_treshold are considered NOT birds (insects or rain)
+const SD_VVP_THRESHOLD = 1; // VPTS data with sd_vvp < sdVpp_treshold are considered NOT birds (insects or rain)
 
 function interpolateStdGammaII(val: number): RGBColor {
   // Num: between 0 and 1

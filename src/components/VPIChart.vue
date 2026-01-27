@@ -27,8 +27,9 @@
       :height="styleConfig.height"
       class="d-block mx-auto"
     >
-      <text v-if="noData" x="50%" y="50%" text-anchor="middle" fill="#6c757d">{{ t("No data found") }}</text>
-
+    <text v-if="!loading && noData" x="50%" y="50%" text-anchor="middle" fill="#6c757d">
+      {{ t("No data found") }}
+    </text>
       <g :transform="`translate(${margin.left}, ${margin.top})`">
         <!-- X axis -->
         <g :transform="`translate(0, ${innerHeight})`">
