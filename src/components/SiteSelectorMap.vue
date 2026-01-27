@@ -1,7 +1,7 @@
 <template>
   <svg class="d-none d-lg-block mt-3 mx-auto" :width="svgWidth" :height="svgHeight">
     <g>
-      <path id="country" :d="countryPath" stroke="#000" stroke-width="1" />
+      <path id="state" :d="statePath" stroke="#000" stroke-width="1" />
       <circle v-for="radar in visibleRadars" :id="'circle-radar-' + radar.odimCode" :key="radar.odimCode" :class="getRadarExtraClass(radar)" r="3px" :cx="projectRadar(radar)[0]" :cy="projectRadar(radar)[1]" @click="$emit('click-circle', radar.odimCode)">
         <b-popover :target="'circle-radar-' + radar.odimCode" triggers="hover">
           {{ radar.displayLabel }}
@@ -15,7 +15,7 @@
 import Vue from "vue";
 import * as d3 from "d3";
 import { GroupedRadarInterface, RadarInterface } from "@/CrowTypes";
-import basemap from "@/geojson_basemap.json";
+import basemap from "@/geojson_basemap2.json";
 
 export default Vue.extend({
   name: "SiteSelectorMap",
@@ -37,7 +37,7 @@ export default Vue.extend({
       xPadding: 15,
       yPadding: 15,
 
-      countriesFeatures: basemap as d3.ExtendedFeatureCollection
+      statesFeatures: basemap as d3.ExtendedFeatureCollection
     }
   },
   computed: {
@@ -78,8 +78,8 @@ export default Vue.extend({
       return d3.geoPath().projection(this.projection);
     },
 
-    countryPath: function (): string | null {
-      return this.pathGenerator(this.countriesFeatures)
+    statePath: function (): string | null {
+      return this.pathGenerator(this.statesFeatures)
     }
   },
   methods: {
@@ -107,7 +107,7 @@ export default Vue.extend({
   fill: #007bff;
 }
 
-#country {
+#state {
   stroke: #6c757d; /* cf. text-muted */
   fill: transparent;
 }

@@ -10,7 +10,7 @@ const svgWidth = 72 * (60 / 15 * 2.5) + globalChartMarginLeft + globalChartMargi
 // - an optional multiplier to scale up or down (1.5)
 
 const meteoBeUrlTemplate = 'https://opendata.meteo.be/ftp/observations/radar/vbird/{odimCode}/{yyyy}/{odimCode}_vpts_{yyyymmdd}.txt'
-const aloftBaltradUrl = "https://aloftdata.s3-eu-west-1.amazonaws.com/baltrad/daily/{odimCode}/{yyyy}/{odimCode}_vpts_{yyyymmdd}.csv"
+const aloftNexradUrl = "https://s3.us-east-1.amazonaws.com/birdcastdata/nexrad/daily/{odimCode}/{yyyy}/{odimCode}_vpts_{yyyymmdd}.csv"
 const availableHeights = [0, 200, 400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000, 2200, 2400, 2600, 2800, 3000, 3200, 3400, 3600, 3800, 4000, 4200, 4400, 4600, 4800];
 
 export default {
@@ -21,254 +21,465 @@ export default {
   ] as Language[],
   initialLanguageCode: "en" as LangCode,
   radarLabelIncludesCode: true,
-  availableRadars: [
+availableRadars: [
     {
-      label: "Belgium",
+      label: "Alabama",
       options: [
-        { odimCode: "bejab", text: "Jabbeke", latitude: 51.1919, longitude: 3.0641, timezone: "Europe/Brussels", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "bewid", text: "Wideumont", latitude: 49.9135, longitude: 5.5044, timezone: "Europe/Brussels", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+        { odimCode: "KBMX", text: "BIRMINGHAM", latitude: 33.172417, longitude: -86.770167, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KEOX", text: "FORT RUCKER", latitude: 31.460556, longitude: -85.459389, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KHTX", text: "HUNTSVILLE", latitude: 34.930556, longitude: -86.083611, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KMOB", text: "MOBILE", latitude: 30.679444, longitude: -88.24, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KMXX", text: "MAXWELL AFB", latitude: 32.53665, longitude: -85.78975, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
       ]
     },
     {
-      label: "Croatia",
+      label: "Alaska",
       options: [
-        { odimCode: "hrbil", text: "Bilogora", latitude: 45.8835, longitude: 17.2005, timezone: "Europe/Zagreb", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "hrdeb", text: "Debeljak", latitude: 44.0455, longitude: 15.3765, timezone: "Europe/Zagreb", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "hrgol", text: "Goli", latitude: 45.0205, longitude: 14.1223, timezone: "Europe/Zagreb", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "hrgra", text: "Gradište", latitude: 45.1592, longitude: 18.7033, timezone: "Europe/Zagreb", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "hrosi", text: "Osijek", latitude: 45.5026, longitude: 18.5613, timezone: "Europe/Zagreb", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "hrpun", text: "Sljeme", latitude: 45.907814, longitude: 15.968383, timezone: "Europe/Zagreb", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "hrulj", text: "Uljenje", latitude: 42.8944, longitude: 17.4783, timezone: "Europe/Zagreb", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "hrzag", text: "Puntijarka", latitude: 45.9078, longitude: 15.9683, timezone: "Europe/Zagreb", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+        { odimCode: "PABC", text: "BETHEL FAA", latitude: 60.791944, longitude: -161.87638, timezone: "America/Anchorage", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV", showOnMap: false },
+        { odimCode: "PACG", text: "SITKA", latitude: 56.852778, longitude: -135.52916, timezone: "America/Anchorage", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" ,showOnMap: false },
+        { odimCode: "PAEC", text: "NOME", latitude: 64.511389, longitude: -165.295, timezone: "America/Anchorage", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" ,showOnMap: false },
+        { odimCode: "PAHG", text: "ANCHORAGE", latitude: 60.725914, longitude: -151.35146, timezone: "America/Anchorage", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV", showOnMap: false  },
+        { odimCode: "PAIH", text: "MIDDLETON ISLAND", latitude: 59.460767, longitude: -146.30344, timezone: "America/Anchorage", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" ,showOnMap: false },
+        { odimCode: "PAKC", text: "KING SALMON", latitude: 58.679444, longitude: -156.62944, timezone: "America/Anchorage", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV", showOnMap: false  },
+        { odimCode: "PAPD", text: "FAIRBANKS", latitude: 65.035114, longitude: -147.50143, timezone: "America/Anchorage", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV", showOnMap: false  }
       ]
     },
     {
-      label: "Czech Republic",
+      label: "Arizona",
       options: [
-        { odimCode: "czbrd", text: "Brdy-Praha", latitude: 49.6583, longitude: 13.8178, timezone: "Europe/Prague", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "czska", text: "Skalky", latitude: 49.5011, longitude: 16.7885, timezone: "Europe/Prague", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+        { odimCode: "KEMX", text: "TUCSON", latitude: 31.89365, longitude: -110.63025, timezone: "America/Phoenix", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KFSX", text: "FLAGSTAFF", latitude: 34.574333, longitude: -111.19844, timezone: "America/Phoenix", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KIWA", text: "PHOENIX", latitude: 33.289233, longitude: -111.66991, timezone: "America/Phoenix", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KYUX", text: "YUMA", latitude: 32.495281, longitude: -114.65671, timezone: "America/Phoenix", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TPHX", text: "PHOENIX", latitude: 33.421111, longitude: -112.16305, timezone: "America/Phoenix", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
       ]
     },
     {
-      label: "Denmark",
+      label: "Arkansas",
       options: [
-        { odimCode: "dkbor", text: "Bornholm", latitude: 55.1127, longitude: 14.8875, timezone: "Europe/Copenhagen", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "dkrom", text: "Römö", latitude: 55.1731, longitude: 8.552, timezone: "Europe/Copenhagen", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "dksin", text: "Sindal", latitude: 57.4893, longitude: 10.1365, timezone: "Europe/Copenhagen", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "dkste", text: "Stevns", latitude: 55.3262, longitude: 12.4493, timezone: "Europe/Copenhagen", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "dkvir", text: "Virring", latitude: 56.024, longitude: 10.0246, timezone: "Europe/Copenhagen", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+        { odimCode: "KLZK", text: "LITTLE ROCK", latitude: 34.8365, longitude: -92.262194, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KSRX", text: "FORT SMITH", latitude: 35.290417, longitude: -94.361889, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
       ]
     },
     {
-      label: "Estonia",
+      label: "California",
       options: [
-        { odimCode: "eehar", text: "Harku", latitude: 59.3977, longitude: 24.6021, timezone: "Europe/Tallinn", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "eesur", text: "Sürgavere", latitude: 58.4823, longitude: 25.5187, timezone: "Europe/Tallinn", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+        { odimCode: "KBBX", text: "BEALE AFB", latitude: 39.495639, longitude: -121.63161, timezone: "America/Los_Angeles", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KBHX", text: "EUREKA", latitude: 40.498583, longitude: -124.29216, timezone: "America/Los_Angeles", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KDAX", text: "SACRAMENTO", latitude: 38.501111, longitude: -121.67783, timezone: "America/Los_Angeles", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KEYX", text: "EDWARDS", latitude: 35.09785, longitude: -117.56075, timezone: "America/Los_Angeles", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KHNX", text: "SAN JOAQUIN VALLEY", latitude: 36.314181, longitude: -119.63213, timezone: "America/Los_Angeles", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KMUX", text: "SAN FRANCISCO", latitude: 37.155222, longitude: -121.89844, timezone: "America/Los_Angeles", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KNKX", text: "SAN DIEGO", latitude: 32.919017, longitude: -117.0418, timezone: "America/Los_Angeles", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KSOX", text: "SANTA ANA MOUNTAINS", latitude: 33.817733, longitude: -117.636, timezone: "America/Los_Angeles", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KVBX", text: "VANDENBERG AFB", latitude: 34.83855, longitude: -120.39791, timezone: "America/Los_Angeles", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KVTX", text: "LOS ANGELES", latitude: 34.412017, longitude: -119.17875, timezone: "America/Los_Angeles", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
       ]
     },
     {
-      label: "Finland",
+      label: "Colorado",
       options: [
-        { odimCode: "fianj", text: "Anjalankoski", latitude: 60.9039, longitude: 27.1081, timezone: "Europe/Helsinki", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "fiika", text: "Ikaalinen", latitude: 61.7673, longitude: 23.0764, timezone: "Europe/Helsinki", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "fikan", text: "Kankaanpää", latitude: 61.8108, longitude: 22.502, timezone: "Europe/Helsinki", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "fikes", text: "Kesälahti", latitude: 61.9069, longitude: 29.7977, timezone: "Europe/Helsinki", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "fikor", text: "Korpo", latitude: 60.1285, longitude: 21.6434, timezone: "Europe/Helsinki", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "fikuo", text: "Kuopio", latitude: 62.8626, longitude: 27.3815, timezone: "Europe/Helsinki", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "filuo", text: "Luosto", latitude: 67.1391, longitude: 26.8969, timezone: "Europe/Helsinki", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "finur", text: "Nurmes", latitude: 63.8378, longitude: 29.4489, timezone: "Europe/Helsinki", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "fipet", text: "Petäjävesi", latitude: 62.3045, longitude: 25.4401, timezone: "Europe/Helsinki", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "fiuta", text: "Utajärvi", latitude: 64.7749, longitude: 26.3189, timezone: "Europe/Helsinki", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "fivan", text: "Vantaa", latitude: 60.2706, longitude: 24.869, timezone: "Europe/Helsinki", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "fivih", text: "Vihti", latitude: 60.5562, longitude: 24.4956, timezone: "Europe/Helsinki", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "fivim", text: "Vimpeli", latitude: 63.1048, longitude: 23.8209, timezone: "Europe/Helsinki", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+        { odimCode: "KFTG", text: "DENVER FRONT RANGE AP", latitude: 39.786639, longitude: -104.5458, timezone: "America/Denver", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KGJX", text: "GRAND JUNCTION", latitude: 39.062169, longitude: -108.21376, timezone: "America/Denver", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KPUX", text: "PUEBLO", latitude: 38.45955, longitude: -104.18135, timezone: "America/Denver", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TDEN", text: "DENVER", latitude: 39.728056, longitude: -104.52611, timezone: "America/Denver", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
       ]
     },
     {
-      label: "France",
+      label: "Delaware",
       options: [
-        { odimCode: "frabb", text: "Abbeville", latitude: 50.136, longitude: 1.8347, timezone: "Europe/Paris", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "fraja", text: "Ajaccio", latitude: 41.9531, longitude: 8.7005, timezone: "Europe/Paris", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "frale", text: "Aléria", latitude: 42.1298, longitude: 9.4964, timezone: "Europe/Paris", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "frave", text: "Avesnes", latitude: 50.1283, longitude: 3.8118, timezone: "Europe/Paris", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "frbla", text: "Blaisy-Haut", latitude: 47.3552, longitude: 4.7759, timezone: "Europe/Paris", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "frbol", text: "Bollène", latitude: 44.323, longitude: 4.7621, timezone: "Europe/Paris", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "frbor", text: "Bordeaux", latitude: 44.8315, longitude: -0.6919, timezone: "Europe/Paris", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "frbou", text: "Bourges", latitude: 47.0586, longitude: 2.3595, timezone: "Europe/Paris", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "frcae", text: "Falaise", latitude: 48.9272, longitude: -0.1496, timezone: "Europe/Paris", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "frche", text: "Cherves", latitude: 46.6986, longitude: 0.0656, timezone: "Europe/Paris", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "frcol", text: "Collobrières", latitude: 43.2166, longitude: 6.3729, timezone: "Europe/Paris", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "frgre", text: "Grèzes", latitude: 45.1044, longitude: 1.3697, timezone: "Europe/Paris", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "frlep", text: "Sembadel", latitude: 45.2892, longitude: 3.7095, timezone: "Europe/Paris", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "frmau", text: "Mont Maurel", latitude: 44.0128, longitude: 6.5292, timezone: "Europe/Paris", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "frmcl", text: "Montclar", latitude: 43.9905, longitude: 2.6096, timezone: "Europe/Paris", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "frmom", text: "Momuy", latitude: 43.6245, longitude: -0.6094, timezone: "Europe/Paris", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "frmtc", text: "Montancy", latitude: 47.3686, longitude: 7.019, timezone: "Europe/Paris", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "frnan", text: "Nancy", latitude: 48.7158, longitude: 6.5816, timezone: "Europe/Paris", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "frnim", text: "Nîmes", latitude: 43.8061, longitude: 4.5027, timezone: "Europe/Paris", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "frniz", text: "Saint Nizier", latitude: 46.0678, longitude: 4.4453, timezone: "Europe/Paris", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "fropo", text: "Opoul", latitude: 42.9184, longitude: 2.865, timezone: "Europe/Paris", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "frpla", text: "Plabennec", latitude: 48.4609, longitude: -4.4298, timezone: "Europe/Paris", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "frtou", text: "Toulouse", latitude: 43.5743, longitude: 1.3763, timezone: "Europe/Paris", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "frtra", text: "Trappes", latitude: 48.7746, longitude: 2.0083, timezone: "Europe/Paris", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "frtre", text: "Treillères", latitude: 47.3374, longitude: -1.6563, timezone: "Europe/Paris", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "frtro", text: "Arcis-sur-Aube", latitude: 48.4621, longitude: 4.3093, timezone: "Europe/Paris", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+        { odimCode: "KDOX", text: "DOVER AFB", latitude: 38.825767, longitude: -75.440117, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
       ]
     },
     {
-      label: "Germany",
+      label: "Florida",
       options: [
-        { odimCode: "deasb", text: "Isle of Borkum", latitude: 53.564, longitude: 6.7482, timezone: "Europe/Berlin", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "deboo", text: "Boostedt", latitude: 54.0043, longitude: 10.0468, timezone: "Europe/Berlin", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "dedrs", text: "Dresden", latitude: 51.1246, longitude: 13.7686, timezone: "Europe/Berlin", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "deeis", text: "Eisberg", latitude: 49.5414, longitude: 12.4044, timezone: "Europe/Berlin", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "deemd", text: "Emden", latitude: 53.3387, longitude: 7.0237, timezone: "Europe/Berlin", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "deess", text: "Essen", latitude: 51.4055, longitude: 6.9669, timezone: "Europe/Berlin", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "defbg", text: "Feldberg", latitude: 47.8736, longitude: 8.0039, timezone: "Europe/Berlin", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "defld", text: "Flechtdorf", latitude: 51.3119, longitude: 8.802, timezone: "Europe/Berlin", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "deflg", text: "Feldberg (now defbg)", latitude: 47.8736, longitude: 8.0039, timezone: "Europe/Berlin", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV", showOnMap: false },
-        { odimCode: "dehnr", text: "Hannover", latitude: 52.46, longitude: 9.6945, timezone: "Europe/Berlin", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "deisn", text: "Isen/München", latitude: 48.1747, longitude: 12.1017, timezone: "Europe/Berlin", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "demem", text: "Memmingen", latitude: 48.0421, longitude: 10.2192, timezone: "Europe/Berlin", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "deneu", text: "Neuhaus", latitude: 50.5001, longitude: 11.1351, timezone: "Europe/Berlin", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "denhb", text: "Neuheilenbach", latitude: 50.1097, longitude: 6.5483, timezone: "Europe/Berlin", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "deoft", text: "Offenthal", latitude: 49.9847, longitude: 8.7129, timezone: "Europe/Berlin", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "depro", text: "Protzel/Berlin", latitude: 52.6486, longitude: 13.858, timezone: "Europe/Berlin", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "deros", text: "Rostock", latitude: 54.1757, longitude: 12.058, timezone: "Europe/Berlin", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "detur", text: "Tuerkheim", latitude: 48.5853, longitude: 9.7828, timezone: "Europe/Berlin", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "desna", text: "Isen/München (now deisn)", latitude: 48.1747, longitude: 12.1017, timezone: "Europe/Berlin", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV", showOnMap: false },
-        { odimCode: "deumd", text: "Ummendorf", latitude: 52.1601, longitude: 11.1761, timezone: "Europe/Berlin", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" }        
+        { odimCode: "KAMX", text: "MIAMI", latitude: 25.611083, longitude: -80.412667, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KBYX", text: "KEY WEST", latitude: 24.5975, longitude: -81.703167, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KEVX", text: "EGLIN AFB", latitude: 30.565033, longitude: -85.921667, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KJAX", text: "JACKSONVILLE", latitude: 30.484633, longitude: -81.7019, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KMLB", text: "MELBOURNE", latitude: 28.113194, longitude: -80.654083, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KTBW", text: "TAMPA", latitude: 27.7055, longitude: -82.401778, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KTLH", text: "TALLAHASSEE", latitude: 30.397583, longitude: -84.328944, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TFLL", text: "FT LAUDERDALE", latitude: 26.143056, longitude: -80.343889, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TMCO", text: "ORLANDO INTERNATIONAL", latitude: 28.343889, longitude: -81.326111, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TMIA", text: "MIAMI", latitude: 25.758056, longitude: -80.491111, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TPBI", text: "WEST PALM BEACH", latitude: 26.688056, longitude: -80.273056, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TTPA", text: "TAMPA", latitude: 27.86, longitude: -82.518056, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
       ]
     },
     {
-      label: "Israel",
+      label: "Georgia",
       options: [
-        { odimCode: "iltlv", text: "Bet Dagan", latitude: 32.007, longitude: 34.8146, timezone: "Asia/Jerusalem", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+        { odimCode: "KFFC", text: "ATLANTA", latitude: 33.36355, longitude: -84.56595, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KJGX", text: "ROBINS AFB", latitude: 32.675683, longitude: -83.350833, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KVAX", text: "MOODY AFB", latitude: 30.890278, longitude: -83.001806, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TATL", text: "ATLANTA", latitude: 33.646944, longitude: -84.261944, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
       ]
     },
     {
-      label: "Netherlands",
+      label: "Hawaii",
       options: [
-        { odimCode: "nldbl", text: "De Bilt", latitude: 52.1017, longitude: 5.1783, timezone: "Europe/Amsterdam", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "nldhl", text: "Den Helder", latitude: 52.9533, longitude: 4.7899, timezone: "Europe/Amsterdam", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "nlhrw", text: "Herwijnen", latitude: 51.8371, longitude: 5.138, timezone: "Europe/Amsterdam", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+        { odimCode: "PHKI", text: "SOUTH KAUAI", latitude: 21.893889, longitude: -159.5525, timezone: "Pacific/Honolulu", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV",showOnMap: false  },
+        { odimCode: "PHKM", text: "KAMUELA", latitude: 20.125278, longitude: -155.77777, timezone: "Pacific/Honolulu", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" ,showOnMap: false },
+        { odimCode: "PHMO", text: "MOLOKAI", latitude: 21.132778, longitude: -157.18027, timezone: "Pacific/Honolulu", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" ,showOnMap: false },
+        { odimCode: "PHWA", text: "SOUTH SHORE", latitude: 19.095, longitude: -155.56888, timezone: "Pacific/Honolulu", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV",showOnMap: false  }
       ]
     },
     {
-      label: "Norway",
+      label: "Idaho",
       options: [
-        { odimCode: "noand", text: "Andoya", latitude: 69.2414, longitude: 16.0028, timezone: "Europe/Oslo", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "nober", text: "Berlevaag", latitude: 70.5107, longitude: 29.0184, timezone: "Europe/Oslo", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "nobml", text: "Boemlo", latitude: 59.854, longitude: 5.09, timezone: "Europe/Oslo", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "nohas", text: "Hasvik", latitude: 70.6052, longitude: 22.443, timezone: "Europe/Oslo", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "nohfj", text: "Hafjell", latitude: 61.2318, longitude: 10.5273, timezone: "Europe/Oslo", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "nohgb", text: "Haegebostad", latitude: 58.3601, longitude: 7.1648, timezone: "Europe/Oslo", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "nohur", text: "Hurum", latitude: 59.6272, longitude: 10.5645, timezone: "Europe/Oslo", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "norsa", text: "Rissa", latitude: 63.6905, longitude: 10.2037, timezone: "Europe/Oslo", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "norsg", text: "Rassegalvarri", latitude: 69.218605, longitude: 23.439759, timezone: "Europe/Oslo", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "norst", text: "Rost", latitude: 67.5307, longitude: 12.0986, timezone: "Europe/Oslo", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "nosmn", text: "Soemna", latitude: 65.2201, longitude: 11.9926, timezone: "Europe/Oslo", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "nosta", text: "Stad", latitude: 62.1871, longitude: 5.1275, timezone: "Europe/Oslo", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+        { odimCode: "KCBX", text: "BOISE", latitude: 43.490217, longitude: -116.23603, timezone: "America/Boise", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KSFX", text: "POCATELLO", latitude: 43.1056, longitude: -112.68613, timezone: "America/Boise", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
       ]
     },
     {
-      label: "Poland",
+      label: "Illinois",
       options: [
-        { odimCode: "plbrz", text: "Brzuchania", latitude: 50.3942, longitude: 20.0797, timezone: "Europe/Warsaw", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "plgda", text: "Gdańsk", latitude: 54.3843, longitude: 18.4563, timezone: "Europe/Warsaw", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "plleg", text: "Legionowo", latitude: 52.4053, longitude: 20.9611, timezone: "Europe/Warsaw", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "plpas", text: "Pastewnik", latitude: 50.892, longitude: 16.0395, timezone: "Europe/Warsaw", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "plpoz", text: "Poznań", latitude: 52.4133, longitude: 16.7971, timezone: "Europe/Warsaw", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "plram", text: "Ramża", latitude: 50.1517, longitude: 18.7267, timezone: "Europe/Warsaw", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "plrze", text: "Rzeszów", latitude: 50.1138, longitude: 22.0367, timezone: "Europe/Warsaw", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "plswi", text: "Świdwin", latitude: 53.7903, longitude: 15.8311, timezone: "Europe/Warsaw", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KILX", text: "LINCOLN", latitude: 40.1505, longitude: -89.336792, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KLOT", text: "CHICAGO", latitude: 41.604444, longitude: -88.084444, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TMDW", text: "CHICAGO MIDWAY", latitude: 41.651111, longitude: -87.73, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TORD", text: "CHICAGO OHARE", latitude: 41.796944, longitude: -87.858056, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
       ]
     },
     {
-      label: "Portugal",
+      label: "Indiana",
       options: [
-        { odimCode: "ptfar", text: "Loule/Cavalos do Caldeirão", latitude: 37.3053, longitude: -7.9517, timezone: "Europe/Lisbon", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "ptlis", text: "Coruche/Cruz do Leão", latitude: 39.0714, longitude: -8.3989, timezone: "Europe/Lisbon", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "ptprt", text: "Arouca/Pico do Gralheiro", latitude: 40.845, longitude: -8.2797, timezone: "Europe/Lisbon", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "pttrc", text: "Terceira/ Santa Barbara", latitude: 38.73014, longitude: -27.32075, timezone: "Europe/Lisbon", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+        { odimCode: "KIND", text: "INDIANAPOLIS", latitude: 39.7075, longitude: -86.280278, timezone: "America/Indiana/Indianapolis", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KIWX", text: "FORT WAYNE", latitude: 41.358611, longitude: -85.7, timezone: "America/Indiana/Indianapolis", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KVWX", text: "EVANSVILLE", latitude: 38.26025, longitude: -87.724528, timezone: "America/Indiana/Indianapolis", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TIDS", text: "INDIANAPOLIS", latitude: 39.636944, longitude: -86.436111, timezone: "America/Indiana/Indianapolis", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
       ]
     },
     {
-      label: "Slovak Republic",
+      label: "Iowa",
       options: [
-        { odimCode: "skjav", text: "Maly Javornik", latitude: 48.2561, longitude: 17.1531, timezone: "Europe/Bratislava", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "skkoj", text: "Kojsovska hola", latitude: 48.7829, longitude: 20.9873, timezone: "Europe/Bratislava", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "skkub", text: "Kubinska hola", latitude: 49.2717, longitude: 19.2494, timezone: "Europe/Bratislava", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "sklaz", text: "Spani laz", latitude: 48.2404, longitude: 19.2574, timezone: "Europe/Bratislava", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+        { odimCode: "KDMX", text: "DES MOINES", latitude: 41.7312, longitude: -93.722869, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KDVN", text: "DAVENPORT", latitude: 41.611667, longitude: -90.580833, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
       ]
     },
     {
-      label: "Slovenia",
+      label: "Kansas",
       options: [
-        { odimCode: "silis", text: "Lisca", latitude: 46.068, longitude: 15.285, timezone: "Europe/Ljubljana", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "sipas", text: "Pasja ravan", latitude: 46.098, longitude: 14.2283, timezone: "Europe/Ljubljana", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+        { odimCode: "KDDC", text: "DODGE CITY", latitude: 37.760833, longitude: -99.968889, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KGLD", text: "GOODLAND", latitude: 39.366944, longitude: -101.70027, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KICT", text: "WICHITA", latitude: 37.654444, longitude: -97.443056, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KTWX", text: "TOPEKA", latitude: 38.99695, longitude: -96.23255, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TICH", text: "WICHITA", latitude: 37.506944, longitude: -97.436944, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
       ]
     },
     {
-      label: "Spain",
+      label: "Kentucky",
       options: [
-        { odimCode: "esalm", text: "Nijar (Almeria)", latitude: 36.8325, longitude: -2.0822, timezone: "Europe/Madrid", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "esbad", text: "Sierra de Fuentes (Caceres)", latitude: 39.4289, longitude: -6.2853, timezone: "Europe/Madrid", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "esbar", text: "Corbera (Barcelona)", latitude: 41.4081, longitude: 1.8847, timezone: "Europe/Madrid", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "escor", text: "Cerceda ( La Coruna)", latitude: 43.1689, longitude: -8.5269, timezone: "Europe/Madrid", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "eslid", text: "Autilla Pino (Palencia)", latitude: 41.9956, longitude: -4.6028, timezone: "Europe/Madrid", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "eslpa", text: "Artenara (Gran Canaria)", latitude: 28.0186, longitude: -15.6144, timezone: "Europe/Madrid", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "esmad", text: "Torrejon de Velasco (Madrid)", latitude: 40.1758, longitude: -3.7136, timezone: "Europe/Madrid", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "esmal", text: "Alhaurin el Grande (Malaga)", latitude: 36.6133, longitude: -4.6592, timezone: "Europe/Madrid", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "esmur", text: "Fortuna (Murcia)", latitude: 38.2644, longitude: -1.1897, timezone: "Europe/Madrid", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "espma", text: "Llucmajor (Baleares)", latitude: 39.3797, longitude: 2.785, timezone: "Europe/Madrid", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "essan", text: "Aguión (Asturias)", latitude: 43.4625, longitude: -6.3019, timezone: "Europe/Madrid", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "essev", text: "Castillo las Guardas (Sevilla)", latitude: 37.6875, longitude: -6.3344, timezone: "Europe/Madrid", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "essse", text: "Baquio (Vizcaya)", latitude: 43.4033, longitude: -2.8419, timezone: "Europe/Madrid", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "esval", text: "Cullera (Valencia)", latitude: 39.1761, longitude: -0.2521, timezone: "Europe/Madrid", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "eszar", text: "Perdiguera (Zaragoza)", latitude: 41.7339, longitude: -0.5458, timezone: "Europe/Madrid", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+        { odimCode: "KHPX", text: "FORT CAMPBELL", latitude: 36.736972, longitude: -87.285583, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KJKL", text: "JACKSON", latitude: 37.590833, longitude: -83.313056, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KLVX", text: "LOUISVILLE", latitude: 37.975278, longitude: -85.943889, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KPAH", text: "PADUCAH", latitude: 37.068333, longitude: -88.771944, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TCVG", text: "COVINGTON", latitude: 38.898056, longitude: -84.58, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TSDF", text: "LOUISVILLE", latitude: 38.046111, longitude: -85.61, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
       ]
     },
     {
-      label: "Sweden",
+      label: "Louisiana",
       options: [
-        { odimCode: "seang", text: "Ängelholm", latitude: 56.3675, longitude: 12.8517, timezone: "Europe/Stockholm", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "searl", text: "Stockholm-Arlanda", latitude: 59.6544, longitude: 17.9463, timezone: "Europe/Stockholm", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "sease", text: "Hemse (Ase) (now sehem)", latitude: 57.3035, longitude: 18.4001, timezone: "Europe/Stockholm", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV", showOnMap: false },
-        { odimCode: "seatv", text: "Åtvidaberg (Vilebo)", latitude: 58.1059, longitude: 15.9363, timezone: "Europe/Stockholm", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "sebaa", text: "Bålsta", latitude: 59.611, longitude: 17.5833, timezone: "Europe/Stockholm", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "sehem", text: "Hemse (Ase)", latitude: 57.3035, longitude: 18.4001, timezone: "Europe/Stockholm", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "sehud", text: "Hudiksvall (now sehuv)", latitude: 61.5771, longitude: 16.7144, timezone: "Europe/Stockholm", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV", showOnMap: false },
-        { odimCode: "sehuv", text: "Hudiksvall", latitude: 61.5771, longitude: 16.7144, timezone: "Europe/Stockholm", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "sekaa", text: "Karlskrona", latitude: 56.2955, longitude: 15.6102, timezone: "Europe/Stockholm", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "sekir", text: "Kiruna (now sekrn)", latitude: 67.7088, longitude: 20.6178, timezone: "Europe/Stockholm", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV", showOnMap: false },
-        { odimCode: "sekkr", text: "Karlskrona (now sekaa)", latitude: 56.2955, longitude: 15.6103, timezone: "Europe/Stockholm", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV", showOnMap: false },
-        { odimCode: "sekrn", text: "Kiruna", latitude: 67.7088, longitude: 20.6178, timezone: "Europe/Stockholm", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "selek", text: "Leksand", latitude: 60.723, longitude: 14.8776, timezone: "Europe/Stockholm", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "sella", text: "Luleå (Rosvik)", latitude: 65.4309, longitude: 21.865, timezone: "Europe/Stockholm", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "selul", text: "Luleå (Rosvik) (now sella)", latitude: 65.4309, longitude: 21.8650, timezone: "Europe/Stockholm", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV", showOnMap: false },
-        { odimCode: "seoer", text: "Örnsköldsvik", latitude: 63.6395, longitude: 18.4019, timezone: "Europe/Stockholm", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "seosd", text: "Östersund", latitude: 63.2951, longitude: 14.7591, timezone: "Europe/Stockholm", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "seosu", text: "Östersund (now seosd)", latitude: 63.2950, longitude: 14.7591, timezone: "Europe/Stockholm", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV", showOnMap: false },
-        { odimCode: "seovi", text: "Örnsköldsvik (now seoer)", latitude: 63.6395, longitude: 18.4019, timezone: "Europe/Stockholm", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV", showOnMap: false },
-        { odimCode: "sevar", text: "Vara (now sevax)", latitude: 58.2556, longitude: 12.8260, timezone: "Europe/Stockholm", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV", showOnMap: false },
-        { odimCode: "sevax", text: "Vara", latitude: 58.2556, longitude: 12.826, timezone: "Europe/Stockholm", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "sevil", text: "Åtvidaberg (Vilebo) (now seatv)", latitude: 58.1059, longitude: 15.9363, timezone: "Europe/Stockholm", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV", showOnMap: false }
+        { odimCode: "KHDC", text: "HAMMOND MUNICIPAL AIRPORT", latitude: 30.5193, longitude: -90.4074, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KLCH", text: "LAKE CHARLES", latitude: 30.125306, longitude: -93.215889, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KLIX", text: "NEW ORLEANS", latitude: 30.336667, longitude: -89.825417, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KPOE", text: "FORT POLK", latitude: 31.155278, longitude: -92.976111, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KSHV", text: "SHREVEPORT", latitude: 32.450833, longitude: -93.84125, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TMSY", text: "NEW ORLEANS", latitude: 30.021944, longitude: -90.403056, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
       ]
     },
     {
-      label: "Switzerland",
+      label: "Maine",
       options: [
-        { odimCode: "chalb", text: "Albis", latitude: 47.2843, longitude: 8.512, timezone: "Europe/Zurich", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "chdol", text: "La Dole", latitude: 46.4251, longitude: 6.0994, timezone: "Europe/Zurich", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "chlem", text: "Monte Lema", latitude: 46.0408, longitude: 8.8332, timezone: "Europe/Zurich", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "chppm", text: "Plaine Monte", latitude: 46.3706, longitude: 7.4866, timezone: "Europe/Zurich", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
-        { odimCode: "chwei", text: "Weissfluhgiptel", latitude: 46.835, longitude: 9.7945, timezone: "Europe/Zurich", endpoint: aloftBaltradUrl, heights: availableHeights, vptsFileFormat: "CSV"}
+        { odimCode: "KCBW", text: "HOULTON", latitude: 46.03925, longitude: -67.806431, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KGYX", text: "PORTLAND", latitude: 43.891306, longitude: -70.256361, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+      ]
+    },
+    {
+      label: "Maryland",
+      options: [
+        { odimCode: "TADW", text: "ANDREWS AFB", latitude: 38.695, longitude: -76.845, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TBWI", text: "BALTIMORE WASHINGTON", latitude: 39.09, longitude: -76.63, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TDCA", text: "WASHINGTON NATIONAL", latitude: 38.758889, longitude: -76.961944, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+      ]
+    },
+    {
+      label: "Massachusetts",
+      options: [
+        { odimCode: "KBOX", text: "BOSTON", latitude: 41.955778, longitude: -71.136861, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TBOS", text: "BOSTON", latitude: 42.158056, longitude: -70.933056, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+      ]
+    },
+    {
+      label: "Michigan",
+      options: [
+        { odimCode: "KAPX", text: "GAYLORD", latitude: 44.90635, longitude: -84.719533, timezone: "America/Detroit", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KDTX", text: "DETROIT", latitude: 42.7, longitude: -83.471667, timezone: "America/Detroit", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KGRR", text: "GRAND RAPIDS", latitude: 42.893889, longitude: -85.544889, timezone: "America/Detroit", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KMQT", text: "MARQUETTE", latitude: 46.531111, longitude: -87.548333, timezone: "America/Detroit", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TDTW", text: "DETROIT", latitude: 42.111111, longitude: -83.515, timezone: "America/Detroit", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+      ]
+    },
+    {
+      label: "Minnesota",
+      options: [
+        { odimCode: "KDLH", text: "DULUTH", latitude: 46.836944, longitude: -92.209722, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KMPX", text: "MINNEAPOLIS", latitude: 44.848889, longitude: -93.565528, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TMSP", text: "MINNEAPOLIS", latitude: 44.871111, longitude: -92.933056, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+      ]
+    },
+    {
+      label: "Mississippi",
+      options: [
+        { odimCode: "KDGX", text: "JACKSON BRANDON", latitude: 32.279944, longitude: -89.984444, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KGWX", text: "COLUMBUS AFB", latitude: 33.896917, longitude: -88.329194, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TMEM", text: "MEMPHIS", latitude: 34.896111, longitude: -89.993056, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+      ]
+    },
+    {
+      label: "Missouri",
+      options: [
+        { odimCode: "KEAX", text: "KANSAS CITY", latitude: 38.81025, longitude: -94.264472, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KLSX", text: "ST LOUIS", latitude: 38.698611, longitude: -90.682778, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KSGF", text: "SPRINGFIELD", latitude: 37.235239, longitude: -93.400419, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TMCI", text: "KANSAS CITY", latitude: 39.498056, longitude: -94.741944, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TSTL", text: "ST LOUIS", latitude: 38.805, longitude: -90.488889, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+      ]
+    },
+    {
+      label: "Montana",
+      options: [
+        { odimCode: "KBLX", text: "BILLINGS", latitude: 45.853778, longitude: -108.6068, timezone: "America/Denver", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KGGW", text: "GLASGOW", latitude: 48.206361, longitude: -106.62469, timezone: "America/Denver", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KMSX", text: "MISSOULA", latitude: 47.041, longitude: -113.98622, timezone: "America/Denver", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KTFX", text: "GREAT FALLS", latitude: 47.459583, longitude: -111.38533, timezone: "America/Denver", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+      ]
+    },
+    {
+      label: "Nebraska",
+      options: [
+        { odimCode: "KLNX", text: "NORTH PLATTE", latitude: 41.957944, longitude: -100.57622, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KOAX", text: "OMAHA", latitude: 41.320369, longitude: -96.366819, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KUEX", text: "HASTINGS", latitude: 40.320833, longitude: -98.441944, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+      ]
+    },
+    {
+      label: "Nevada",
+      options: [
+        { odimCode: "KESX", text: "LAS VEGAS", latitude: 35.70135, longitude: -114.89165, timezone: "America/Los_Angeles", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KLRX", text: "ELKO", latitude: 40.73955, longitude: -116.8027, timezone: "America/Los_Angeles", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KRGX", text: "RENO", latitude: 39.754056, longitude: -119.46202, timezone: "America/Los_Angeles", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TLAS", text: "LAS VEGAS", latitude: 36.143889, longitude: -115.00694, timezone: "America/Los_Angeles", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+      ]
+    },
+    {
+      label: "New Jersey",
+      options: [
+        { odimCode: "KDIX", text: "PHILADELPHIA", latitude: 39.947089, longitude: -74.410731, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TEWR", text: "NEWARK", latitude: 40.593056, longitude: -74.27, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TPHL", text: "PHILADELPHIA", latitude: 39.948889, longitude: -75.068889, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+      ]
+    },
+    {
+      label: "New Mexico",
+      options: [
+        { odimCode: "KABX", text: "ALBUQUERQUE", latitude: 35.149722, longitude: -106.82388, timezone: "America/Denver", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KEPZ", text: "EL PASO", latitude: 31.873056, longitude: -106.698, timezone: "America/Denver", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KFDX", text: "CANNON AFB", latitude: 34.634167, longitude: -103.61888, timezone: "America/Denver", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KHDX", text: "HOLLOMAN AFB", latitude: 33.077, longitude: -106.12003, timezone: "America/Denver", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+      ]
+    },
+    {
+      label: "New York",
+      options: [
+        { odimCode: "KBGM", text: "BINGHAMTON", latitude: 42.199694, longitude: -75.984722, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KBUF", text: "BUFFALO", latitude: 42.948789, longitude: -78.736781, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KENX", text: "ALBANY", latitude: 42.586556, longitude: -74.064083, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KOKX", text: "NEW YORK CITY", latitude: 40.865528, longitude: -72.863917, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KTYX", text: "FORT DRUM", latitude: 43.755694, longitude: -75.679861, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TJFK", text: "NEW YORK CITY JFK", latitude: 40.588889, longitude: -73.881111, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+      ]
+    },
+    {
+      label: "North Carolina",
+      options: [
+        { odimCode: "KLTX", text: "WILMINGTON", latitude: 33.98915, longitude: -78.429108, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KMHX", text: "MOREHEAD CITY", latitude: 34.775908, longitude: -76.876189, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KRAX", text: "RALEIGH DURHAM", latitude: 35.665519, longitude: -78.48975, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TCLT", text: "CHARLOTTE", latitude: 35.336944, longitude: -80.885, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TRDU", text: "RALEIGH", latitude: 36.001944, longitude: -78.696944, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+      ]
+    },
+    {
+      label: "North Dakota",
+      options: [
+        { odimCode: "KBIS", text: "BISMARCK", latitude: 46.770833, longitude: -100.76055, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KMBX", text: "MINOT AFB", latitude: 48.393056, longitude: -100.86444, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KMVX", text: "GRAND FORKS", latitude: 47.527778, longitude: -97.325556, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+      ]
+    },
+    {
+      label: "Ohio",
+      options: [
+        { odimCode: "KCLE", text: "CLEVELAND", latitude: 41.413217, longitude: -81.859867, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KILN", text: "CINCINNATI", latitude: 39.420483, longitude: -83.82145, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TCMH", text: "COLUMBUS", latitude: 40.006111, longitude: -82.715, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TDAY", text: "DAYTON", latitude: 40.021944, longitude: -84.123056, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TLVE", text: "CLEVELAND", latitude: 41.29, longitude: -82.008056, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+      ]
+    },
+    {
+      label: "Oklahoma",
+      options: [
+        { odimCode: "KCRI", text: "ROC FAA REDUNDANT RDA 1", latitude: 35.238333, longitude: -97.46, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KFDR", text: "ALTUS AFB", latitude: 34.362194, longitude: -98.976667, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KINX", text: "TULSA", latitude: 36.175131, longitude: -95.564161, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KOUN", text: "NORMAN NSSL", latitude: 35.236058, longitude: -97.46235, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KTLX", text: "OKLAHOMA CITY", latitude: 35.333361, longitude: -97.277761, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KVNX", text: "VANCE AFB", latitude: 36.740617, longitude: -98.127717, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TOKC", text: "NORMAN WFO", latitude: 35.276111, longitude: -97.51, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TTUL", text: "TULSA", latitude: 36.071111, longitude: -95.826944, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+      ]
+    },
+    {
+      label: "Oregon",
+      options: [
+        { odimCode: "KMAX", text: "MEDFORD", latitude: 42.081169, longitude: -122.71736, timezone: "America/Los_Angeles", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KPDT", text: "PENDLETON", latitude: 45.69065, longitude: -118.85293, timezone: "America/Los_Angeles", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KRTX", text: "PORTLAND", latitude: 45.715039, longitude: -122.965, timezone: "America/Los_Angeles", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+      ]
+    },
+    {
+      label: "Overseas Territories",
+      options: [
+        { odimCode: "LPLA", text: "LAJES AB", latitude: 38.73028, longitude: -27.32167, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV",showOnMap: false},
+        { odimCode: "PGUA", text: "ANDERSEN AFB AGANA", latitude: 13.455833, longitude: 144.811111, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV",showOnMap: false },
+        { odimCode: "RKJK", text: "KUNSAN", latitude: 35.924167, longitude: 126.622222, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV",showOnMap: false },
+        { odimCode: "RKSG", text: "CAMP HUMPHREYS", latitude: 37.207569, longitude: 127.285561, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV",showOnMap: false },
+        { odimCode: "RODN", text: "KADENA", latitude: 26.3078, longitude: 127.903469, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV",showOnMap: false }
+      ]
+    },
+    {
+      label: "Pennsylvania",
+      options: [
+        { odimCode: "KCCX", text: "STATE COLLEGE", latitude: 40.923167, longitude: -78.003722, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KPBZ", text: "PITTSBURGH", latitude: 40.531717, longitude: -80.217967, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TPIT", text: "PITTSBURGH", latitude: 40.501111, longitude: -80.486111, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+      ]
+    },
+    {
+      label: "Puerto Rico",
+      options: [
+        { odimCode: "TJBQ", text: "RAFAEL HERNANDEZ AIRPORT", latitude: 18.485, longitude: -67.143, timezone: "America/Puerto_Rico", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TJRV", text: "JOSE APONTE DE LA TORRE AI", latitude: 18.256, longitude: -65.637, timezone: "America/Puerto_Rico", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TJUA", text: "SAN JUAN", latitude: 18.115667, longitude: -66.078167, timezone: "America/Puerto_Rico", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TSJU", text: "SAN JUAN", latitude: 18.473889, longitude: -66.178889, timezone: "America/Puerto_Rico", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+      ]
+    },
+    {
+      label: "South Carolina",
+      options: [
+        { odimCode: "KCAE", text: "COLUMBIA", latitude: 33.948722, longitude: -81.118278, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KCLX", text: "CHARLESTON", latitude: 32.655528, longitude: -81.042194, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KGSP", text: "GREER", latitude: 34.883306, longitude: -82.219833, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+      ]
+    },
+    {
+      label: "South Dakota",
+      options: [
+        { odimCode: "KABR", text: "ABERDEEN", latitude: 45.455833, longitude: -98.413333, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KFSD", text: "SIOUX FALLS", latitude: 43.587778, longitude: -96.729444, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KUDX", text: "RAPID CITY", latitude: 44.124722, longitude: -102.83, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+      ]
+    },
+    {
+      label: "Tennessee",
+      options: [
+        { odimCode: "KMRX", text: "KNOXVILLE", latitude: 36.168611, longitude: -83.401944, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KNQA", text: "MEMPHIS", latitude: 35.344722, longitude: -89.873333, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KOHX", text: "NASHVILLE", latitude: 36.247222, longitude: -86.5625, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TBNA", text: "NASHVILLE", latitude: 35.98, longitude: -86.661944, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+      ]
+    },
+    {
+      label: "Texas",
+      options: [
+        { odimCode: "KAMA", text: "AMARILLO", latitude: 35.233333, longitude: -101.70927, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KBRO", text: "BROWNSVILLE", latitude: 25.916, longitude: -97.418967, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KCRP", text: "CORPUS CHRISTI", latitude: 27.784017, longitude: -97.51125, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KDFX", text: "LAUGHLIN AFB", latitude: 29.273139, longitude: -100.28033, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KDYX", text: "DYESS AFB", latitude: 32.5385, longitude: -99.254333, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KEWX", text: "AUSTIN SAN ANTONIO", latitude: 29.704056, longitude: -98.028611, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KFWS", text: "DALLAS", latitude: 32.573, longitude: -97.30315, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KGRK", text: "FORT HOOD", latitude: 30.721833, longitude: -97.382944, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KHGX", text: "HOUSTON", latitude: 29.4719, longitude: -95.078733, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KLBB", text: "LUBBOCK", latitude: 33.654139, longitude: -101.81416, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KMAF", text: "MIDLAND ODESSA", latitude: 31.943461, longitude: -102.18925, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KSJT", text: "SAN ANGELO", latitude: 31.371278, longitude: -100.4925, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TDAL", text: "DALLAS LOVE FIELD", latitude: 32.926111, longitude: -96.968056, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TDFW", text: "DALLAS FT WORTH", latitude: 33.065, longitude: -96.918056, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "THOU", text: "HOUSTON HOBBY", latitude: 29.516111, longitude: -95.241944, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TIAH", text: "HOUSTON INTERNATIONAL", latitude: 30.065, longitude: -95.566944, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+      ]
+    },
+    {
+      label: "Utah",
+      options: [
+        { odimCode: "KICX", text: "CEDAR CITY", latitude: 37.59105, longitude: -112.86218, timezone: "America/Denver", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KMTX", text: "SALT LAKE CITY", latitude: 41.262778, longitude: -112.44777, timezone: "America/Denver", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TSLC", text: "SALT LAKE CITY", latitude: 40.966944, longitude: -111.93, timezone: "America/Denver", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+      ]
+    },
+    {
+      label: "Vermont",
+      options: [
+        { odimCode: "KCXX", text: "BURLINGTON", latitude: 44.511, longitude: -73.166431, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+      ]
+    },
+    {
+      label: "Virginia",
+      options: [
+        { odimCode: "KAKQ", text: "NORFOLK RICH", latitude: 36.98405, longitude: -77.007361, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KFCX", text: "ROANOKE", latitude: 37.0244, longitude: -80.273969, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KLWX", text: "STERLING", latitude: 38.976111, longitude: -77.4875, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TIAD", text: "WASHINGTON DULLES", latitude: 39.083889, longitude: -77.528889, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+      ]
+    },
+    {
+      label: "Washington",
+      options: [
+        { odimCode: "KATX", text: "SEATTLE", latitude: 48.194611, longitude: -122.49569, timezone: "America/Los_Angeles", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KLGX", text: "LANGLEY HILL NW WASHINGTON", latitude: 47.116944, longitude: -124.10666, timezone: "America/Los_Angeles", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KOTX", text: "SPOKANE", latitude: 47.680417, longitude: -117.62677, timezone: "America/Los_Angeles", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+      ]
+    },
+    {
+      label: "West Virginia",
+      options: [
+        { odimCode: "KRLX", text: "CHARLESTON", latitude: 38.311111, longitude: -81.722778, timezone: "America/New_York", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+      ]
+    },
+    {
+      label: "Wisconsin",
+      options: [
+        { odimCode: "KARX", text: "LA CROSSE", latitude: 43.822778, longitude: -91.191111, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KGRB", text: "GREEN BAY", latitude: 44.498633, longitude: -88.111111, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KMKX", text: "MILWAUKEE", latitude: 42.9679, longitude: -88.550667, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "TMKE", text: "MILWAUKEE", latitude: 42.818889, longitude: -88.046111, timezone: "America/Chicago", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
+      ]
+    },
+    {
+      label: "Wyoming",
+      options: [
+        { odimCode: "KCYS", text: "CHEYENNE", latitude: 41.151919, longitude: -104.80603, timezone: "America/Denver", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" },
+        { odimCode: "KRIW", text: "RIVERTON", latitude: 43.066089, longitude: -108.4773, timezone: "America/Denver", endpoint: aloftNexradUrl, heights: availableHeights, vptsFileFormat: "CSV" }
       ]
     }
-  ] as GroupedRadarInterface[],
+] as GroupedRadarInterface[],
 
-  initialRadarCode: "bejab",
+  initialRadarCode: "KCYS",
 
   availableTimeIntervals: [
     { stringId: "1d", value: 24 },

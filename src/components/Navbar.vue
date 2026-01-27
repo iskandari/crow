@@ -4,7 +4,7 @@
       <b-navbar-brand href="https://aloftdata.eu">
         Aloft
       </b-navbar-brand>
-      <span class="navbar-text">Visualize bird movement data from European weather radars</span>
+      <span class="navbar-text">Visualize bird movement data from NEXRAD weather radars</span>
       <b-navbar-nav class="ml-auto">
         <!-- <language-selector /> -->
       </b-navbar-nav>
