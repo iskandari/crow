@@ -3,8 +3,8 @@ name: Run tests and deploy to GitHub pages if successful
 concurrency:
   group: pages-${{ github.ref }}
   cancel-in-progress: true
-
-
+permissions:
+  contents: write
 on:
   push:
     branches:
@@ -24,7 +24,7 @@ jobs:
 
       - name: Install and run unit tests 🔧
         run: | 
-          npm install --force
+          npm ci
           npm run test:unit
 
   deploy-gh-pages:
@@ -41,7 +41,7 @@ jobs:
 
       - name: Install and build 🔧
         run: |
-          npm install --force
+          npm ci
           npm run build
 
       - name: Deploy 🚀
