@@ -284,11 +284,17 @@ function getBrowserFirstLangCode(): string | undefined {
 
 }
 
-const groupBy = <T, K extends keyof any>(arr: T[], key: (i: T) => K) =>
-  // from https://stackoverflow.com/questions/42136098/array-groupby-in-typescript
-  arr.reduce((groups, item) => {
-    (groups[key(item)] ||= []).push(item);
+export function groupBy<T, K extends string | number>(
+  arr: T[],
+  key: (item: T) => K
+): Record<K, T[]> {
+  return arr.reduce((groups, item) => {
+    const k = key(item);
+    if (!groups[k]) groups[k] = [];
+    groups[k].push(item);
     return groups;
   }, {} as Record<K, T[]>);
+}
+
 
 export default { parseVpts, integrateProfile, metersToFeet, makeSafeForCSS, formatTimestamp, formatMoment, uuidv4, densityToBirdtam, interpolateStdGammaII, translateString, filterVpts, getBrowserFirstLangCode, buildVpTsDataUrl, groupBy }
