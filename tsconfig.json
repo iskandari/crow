@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es2021",
     "experimentalDecorators": true,
     "module": "es2015",
     "strict": true,
@@ -20,6 +20,7 @@
     },
     "lib": [
       "esnext",
+      "es2021",
       "dom",
       "dom.iterable",
       "scripthost"

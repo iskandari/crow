@@ -1,8 +1,8 @@
 <template>
   <b-navbar type="light" variant="light">
     <b-container>
-      <b-navbar-brand href="https://aloftdata.eu">
-        Aloft
+      <b-navbar-brand href="https://iskandari.github.io/birdcast.org/">
+        Aloft <span class="birdcast-muted">BirdCast</span>
       </b-navbar-brand>
       <span class="navbar-text">Visualize bird movement data from NEXRAD weather radars</span>
       <b-navbar-nav class="ml-auto">
@@ -48,4 +48,12 @@ export default Vue.extend({
   }
 });
 </script>
+<style>
+.birdcast-muted {
+  color: #9aa0a6;
+}
+.birdcast-muted:hover {
+  color: #b0b5ba;
+}
+</style>
 
