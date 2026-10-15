@@ -245,6 +245,7 @@ export default Vue.extend({
     return {
       readyForCharts: false,
       filesLoadingCount: 0,
+      loadGeneration: 0,
 
       VPIChartStyle: config.VPIChartStyle,
       VPIChartMode: this.vpiChartModeProp as IntegratedPropertyName,
@@ -256,7 +257,7 @@ export default Vue.extend({
 
       // Data is kept as an object for performance reasons, the "radarVptsAsArray" computed property allows reading it as an array.
       // All timestamps are kept in UTC (transformed later, in the viz components)
-      radarVpts: {} as RadarVptsAsTree,
+      radarVpts: Object.freeze({}) as RadarVptsAsTree,
 
       publicPath: process.env.BASE_URL,
       baseUrl: "",
@@ -409,7 +410,7 @@ export default Vue.extend({
 
       return periods;
     },
-    radarVptsAsArray(): VPTSDataRow[] {
+    radarVptsAsArray(): ReadonlyArray<VPTSDataRow> {
       const dataArray = [];
       for (const [timestamp, metadataObj] of Object.entries(this.radarVpts)) {
         for (const [height, props] of Object.entries(metadataObj.heightData)) {
@@ -417,7 +418,7 @@ export default Vue.extend({
           dataArray.push({ ...o, ...(props as VPTSDataRow) });
         }
       }
-      return dataArray;
+      return Object.freeze(dataArray);
     },
     totalNumberOfBirds(): number {
       // see https://github.com/inbo/crow/issues/112
@@ -538,8 +539,8 @@ export default Vue.extend({
        - Heights depend on the radar configuration
     */
     initializeEmptyData(): void {
-      // Remove existing data
-      this.radarVpts = {} as RadarVptsAsTree;
+      // Build off-state, then publish once. Vue need only observe replacement.
+      const tree = {} as RadarVptsAsTree;
 
       const currentMoment = this.startMoment.clone();
       while (currentMoment.isBefore(this.endMoment)) {
@@ -559,14 +560,11 @@ export default Vue.extend({
           heightData: heightObj
         };
 
-        this.$set(
-          this.radarVpts,
-          currentMoment.toDate().getTime(),
-          metadataObj
-        );
+        tree[currentMoment.valueOf()] = metadataObj;
 
         currentMoment.add(this.appTemporalResolution, "seconds");
       }
+      this.radarVpts = Object.freeze(tree);
     },
 
     decrementPeriod(): void {
@@ -586,7 +584,10 @@ export default Vue.extend({
     },
 
     loadData(): void {
+      const generation = ++this.loadGeneration;
       this.$nextTick(() => {
+        if (generation !== this.loadGeneration) return;
+        this.filesLoadingCount = 0;
         this.readyForCharts = true;
         this.initializeEmptyData();
         this.populateDataFromCrowServer(
@@ -597,42 +598,37 @@ export default Vue.extend({
       });
     },
 
-  snapToAppGridMs(tsMs: number): number {
-      const stepMs = this.appTemporalResolution * 1000; // appTemporalResolution is seconds
-      return Math.floor(tsMs / stepMs) * stepMs;        // floor to grid
-    },
-
-
-    /* Store a Vpts data row originating in a file into vptsData */
-/* Store a Vpts data row originating in a file into vptsData */
-    storeDataRow(vptsDataRow: VPTSDataRowFromFile): void {
-      const snapped = this.snapToAppGridMs(vptsDataRow.datetime);
-
-      if (!Object.prototype.hasOwnProperty.call(this.radarVpts, snapped)) {
-        return;
+    /* Apply a day's rows without thousands of reactive setters/notifications.
+       Copy only changed profiles, preserving previously published snapshots. */
+    storeDataRows(rows: VPTSDataRowFromFile[]): void {
+      const previous = this.radarVpts;
+      const next = { ...previous };
+      const changed = new Set<number>();
+      const stepMs = this.appTemporalResolution * 1000;
+      for (const row of rows) {
+        const snapped = Math.floor(row.datetime / stepMs) * stepMs;
+        if (!Object.prototype.hasOwnProperty.call(previous, snapped)) continue;
+        if (!changed.has(snapped)) {
+          next[snapped] = {
+            ...previous[snapped],
+            heightData: { ...previous[snapped].heightData }
+          };
+          changed.add(snapped);
+        }
+        next[snapped].heightData[row.height] = {
+          ...row, datetime: snapped, noData: false
+        };
       }
-
-      const objToStore = {
-        ...vptsDataRow,
-        datetime: snapped, // keep consistent with the slot key
-        noData: false
-      };
-
-      this.$set(
-        this.radarVpts[snapped].heightData,
-        vptsDataRow.height,
-        objToStore
-      );
+      if (changed.size) this.radarVpts = Object.freeze(next);
     },
-
 
     getDatesForData(startMoment: moment.Moment, stopMoment: moment.Moment): string[] {
       // List the dates for which we'll need to load the data (according to startMoment and stopMoment)
       // Take into account the app temporal resolution and the upper limit (if resolution is 5 min and data shown until midgnight = data loaded until 23:55)
       //
       // Returns an array of strings in the 'YYYY-MM-DD' format
-      startMoment = startMoment.utc() // Data files are in UTC
-      stopMoment = stopMoment.subtract(this.appTemporalResolution, "seconds").utc();
+      startMoment = startMoment.clone().utc() // Data files are in UTC
+      stopMoment = stopMoment.clone().subtract(this.appTemporalResolution, "seconds").utc();
 
       var dateArray: Set<string> = new Set;
       var currentDate = startMoment;
@@ -645,19 +641,19 @@ export default Vue.extend({
     },
 
 
-    /* for a given radar: iterate on days, load the data files from server and call storeDataRow() for each row */
+    /* Fetch days concurrently and publish each completed day as one snapshot. */
     populateDataFromCrowServer(
       radar: RadarInterface,
       startMoment: moment.Moment,
       endMoment: moment.Moment
     ): void {
-      for (let currentDate of this.getDatesForData(startMoment, endMoment)) {
+      const generation = this.loadGeneration;
+      for (const currentDate of this.getDatesForData(startMoment, endMoment)) {
         const url = helpers.buildVpTsDataUrl(radar, moment(currentDate, "YYYY-MM-DD"));
         this.filesLoadingCount++;
         axios.get(url).then(response => {
-          console.log("[VPTS] url", url, "bytes", JSON.stringify(response.data)?.length ?? "n/a");
+          if (generation !== this.loadGeneration) return;
           const parsed = helpers.parseVpts(response.data, radar.vptsFileFormat);
-          console.log("[VPTS] parsed rows", parsed.length, "sample", parsed[10]);
 
           // Data are floored to resolution of app (`parseVol2birdVpts()`), which can create multiple entries with the same datetime index
           // In this section:
@@ -668,16 +664,16 @@ export default Vue.extend({
           const dayData = helpers.filterVpts(
             Object.entries(
               helpers.groupBy(
-                helpers.parseVpts(response.data, radar.vptsFileFormat), x => x.datetime)
+                parsed, x => x.datetime)
             )
-            .map(x => x[1].slice(0, this.selectedRadar.heights.length))
+            .map(x => x[1].slice(0, radar.heights.length))
             .flat()
           )
-          for (const val of dayData) {
-            this.storeDataRow(val);
-          }
+          this.storeDataRows(dayData);
+        }).catch(error => {
+          if (generation === this.loadGeneration) console.warn("Unable to load VPTS data", url, error);
         }).finally(() => {
-          this.filesLoadingCount--;
+          if (generation === this.loadGeneration) this.filesLoadingCount--;
         });
       }
     },

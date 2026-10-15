@@ -101,6 +101,7 @@ function csvStringToObjs(csvString: string, lineSeparator='\n', fieldSeparator='
     }
 
     for(var i = 1; i < arr.length; i++) {
+      if (!arr[i].trim()) continue;
       var data = arr[i].split(fieldSeparator);
       var obj = {} as csvDataRow;
       for(var j = 0; j < data.length; j++) {
@@ -118,30 +119,42 @@ function parseCSVVpts(responseString: string): VPTSDataRowFromFile[] {
   const fieldSeparator = ',';
   const dateTimeFormat = 'YYYY-MM-DD hh:mm:ss';
   const quotedHeaders = true;
-  const trailingLine = true;
+  const rows = csvStringToObjs(responseString, lineSeparator, fieldSeparator, quotedHeaders);
+  const timestamps = new Map<string, number>();
+  const seen = new Map<number, Set<number>>();
+  const result: VPTSDataRowFromFile[] = [];
 
-  const d = csvStringToObjs(responseString, lineSeparator, fieldSeparator, quotedHeaders);
+  for (const row of rows) {
+    // Every altitude in a profile shares a timestamp: parse it only once.
+    let datetime = timestamps.get(row.datetime);
+    if (datetime === undefined) {
+      datetime = moment.utc(row.datetime, dateTimeFormat).valueOf();
+      timestamps.set(row.datetime, datetime);
+    }
+    const height = parseInt(row.height);
 
-  if (trailingLine) {
-    d.pop()
-  }
+    // Keep the first occurrence of each timestamp/height in linear time.
+    // Invalid values did not match any row in the previous equality-based filter.
+    if (Number.isNaN(datetime) || Number.isNaN(height)) continue;
+    let heights = seen.get(datetime);
+    if (!heights) {
+      heights = new Set<number>();
+      seen.set(datetime, heights);
+    }
+    if (heights.has(height)) continue;
+    heights.add(height);
 
-  let r = d.map(function (row) {
-    return {
-      datetime: moment.utc(row.datetime, dateTimeFormat).valueOf(),
-      height: parseInt(row.height),
+    result.push({
+      datetime,
+      height,
       dd: parseFloat(row.dd),
       ff: parseFloat(row.ff),
       dens: parseFloatOrZero(row.dens),
       sd_vvp: parseFloat(row.sd_vvp),
       eta: parseFloatOrZero(row.eta)
-    }
-  });
-
-  // We sometimes have duplicate data for the same datetime and height
-  // In those case, we only keep the first one
-  // See https://github.com/aloftdata/crow/issues/16
-  return r.filter((value, index, self) => self.findIndex(t => t.datetime === value.datetime && t.height === value.height) === index);
+    });
+  }
+  return result;
 }
 
 /* Build the data URL for a given day and radar */

@@ -27,9 +27,9 @@
       />
     </b-form>
 
-    <svg 
-      id="vp-chart" 
-      :width="styleConfig.width" 
+    <svg
+      id="vp-chart"
+      :width="styleConfig.width"
       :height="styleConfig.height"
       class="d-block mx-auto"
     >
@@ -42,37 +42,54 @@
         </g>
         <g v-yaxis-left="{'scale': yScale}" />
 
-        <template v-for="d in vptsDataPrepared">
-          <rect
-            :id="'rect-' + d.timestamp + '-' + d.height"
-            :key="'rect-' + d.timestamp + '-' + d.height"
-            :x="d.x"
-            :y="d.y"
-            :fill="d.fill"
-            :height="rectHeight"
-            :width="rectWidth"
+        <foreignObject
+          v-if="!styleConfig.showTooltip"
+          :width="innerWidth"
+          :height="innerHeight"
+          pointer-events="none"
+        >
+          <canvas
+            v-heatmap="{cells: vptsDataPrepared, width: innerWidth, height: innerHeight, cellWidth: rectWidth, cellHeight: rectHeight}"
+            class="vp-heatmap"
+            xmlns="http://www.w3.org/1999/xhtml"
+            :style="{width: innerWidth + 'px', height: innerHeight + 'px', display: 'block'}"
+            role="img"
+            aria-label="Bird density by time and altitude"
           />
+        </foreignObject>
+        <template v-else>
+          <template v-for="d in vptsDataPrepared">
+            <rect
+              :id="'rect-' + d.timestamp + '-' + d.height"
+              :key="'rect-' + d.timestamp + '-' + d.height"
+              :x="d.x"
+              :y="d.y"
+              :fill="d.fill"
+              :height="rectHeight"
+              :width="rectWidth"
+            />
 
-          <b-popover
-            v-if="styleConfig.showTooltip"
-            :key="'popover-' + d.timestamp + '-' + d.height"
-            :target="'rect-' + d.timestamp + '-' + d.height"
-            triggers="hover"
-            placement="top"
-          >
-            <!-- eslint-disable-next-line vue/valid-v-slot -->
-            <template #title>{{ formatTimestampForTooltip(d.timestamp) }}</template>
-            <b>Height</b>
-            {{ d.height }}m
-            <br />
-            <b>Density</b>
-            {{ d.dens }}
-          </b-popover>
+            <b-popover
+              v-if="styleConfig.showTooltip"
+              :key="'popover-' + d.timestamp + '-' + d.height"
+              :target="'rect-' + d.timestamp + '-' + d.height"
+              triggers="hover"
+              placement="top"
+            >
+              <!-- eslint-disable-next-line vue/valid-v-slot -->
+              <template #title>{{ formatTimestampForTooltip(d.timestamp) }}</template>
+              <b>Height</b>
+              {{ d.height }}m
+              <br />
+              <b>Density</b>
+              {{ d.dens }}
+            </b-popover>
+          </template>
         </template>
 
-        <g 
-          v-yaxis-right="{'scale': yScaleFeet }" 
-          :transform="`translate(${innerWidth}, 0)`" 
+        <g
+          v-yaxis-right="{'scale': yScaleFeet }"
+          :transform="`translate(${innerWidth}, 0)`"
         />
 
         <text
@@ -137,6 +154,22 @@ export default Vue.extend({
     ColorLegend,
   },
   directives: {
+    heatmap(el, binding): void {
+      // One canvas replaces thousands of independently patched SVG rectangles.
+      // The backing store follows device pixel ratio to keep high-DPI displays crisp.
+      const canvas = el as HTMLCanvasElement;
+      const { cells, width, height, cellWidth, cellHeight } = binding.value;
+      const ratio = window.devicePixelRatio || 1;
+      canvas.width = Math.round(width * ratio);
+      canvas.height = Math.round(height * ratio);
+      const context = canvas.getContext("2d");
+      if (!context) return;
+      context.scale(ratio, ratio);
+      for (const cell of cells as VPTSEntryPrepared[]) {
+        context.fillStyle = cell.fill;
+        context.fillRect(cell.x, cell.y || 0, cellWidth, cellHeight);
+      }
+    },
     yaxisRight(el, binding): void {
       const scaleFunction = binding.value.scale;
 
@@ -248,7 +281,7 @@ export default Vue.extend({
           en: "Height (meters)",
           fr: "Altitude (mètres)",
           nl: "Hoogte (meter)"
-        }, 
+        },
         "Height (feet)": {
           en: "Height (feet)",
           fr: "Altitude (pieds)",
@@ -359,7 +392,7 @@ export default Vue.extend({
     },
     yScale: function (): d3.ScalePoint<string> {
       return d3
-        .scalePoint() 
+        .scalePoint()
         .range([this.innerHeight, 0])
         .domain(this.distinctHeightsMetersPlusOne.map(String)) // ... PlusOne: for a nicer ais display
     },
@@ -370,13 +403,28 @@ export default Vue.extend({
         .domain([0, this.maxHeightFeet]);
     },
     vptsDataPrepared: function (): VPTSEntryPrepared[] {
-      return this.vptsData.map((data) => ({
-        ...data,
-
-        x: Math.round(Math.round(this.xScale(data.timestamp)) + 1),
-        y: this.getRectYValue(data.height),
-        fill: this.getRectColor(data),
-      }));
+      const scheme = this.selectedColorSchemeConfig;
+      if (scheme.dynamicDomain) {
+        scheme.colorScale.domain([0, this.maxDensity]);
+        (scheme.colorScale as d3.ScaleSequential<string> & { nice(): unknown }).nice();
+      }
+      // Resolve computed scales once. Reading them for every cell makes Vue 2
+      // repeatedly walk the dependencies of the entire reactive data array.
+      const xScale = this.xScale;
+      const yScale = this.yScale;
+      const rectHeight = this.rectHeight;
+      const noDataColor = this.styleConfig.noDataColor;
+      const colorScale = scheme.colorScale;
+      const preprocess = scheme.dataPreprocessor;
+      return this.vptsData.map((data) => {
+        const y = yScale(String(data.height));
+        return {
+          ...data,
+          x: Math.round(xScale(data.timestamp)) + 1,
+          y: y ? y - rectHeight : 0,
+          fill: data.noData ? noDataColor : colorScale(preprocess ? preprocess(data.dens) : data.dens),
+        };
+      });
     },
   },
   watch: {
@@ -418,39 +466,6 @@ export default Vue.extend({
         this.showTimeAs,
         this.styleConfig.axisTimeFormat
       );
-    },
-    getRectYValue: function (height: number): number {
-      const scaledValue = this.yScale(height.toString());
-      if (scaledValue) {
-        return scaledValue - this.rectHeight;
-      } else {
-        // We've asked yScale for a value outside of the domain, log error?
-        return 0;
-      }
-    },
-    getRectColor: function (data: VPTSEntry): string {
-      let color;
-      const config = this.selectedColorSchemeConfig;
-
-      if (data.noData) {
-        color = this.styleConfig.noDataColor;
-      } else {
-        // We have proper data for this rectangle
-
-        // For some schemes, the density data has to be preprocessed:
-        const density = config.dataPreprocessor
-          ? config.dataPreprocessor(data.dens)
-          : data.dens;
-
-        let scale = config.colorScale;
-        if (config.dynamicDomain) {
-          // @ts-ignore: several TS issues, we assume it's because outdated D3 definitions
-          scale = scale.domain([0, this.maxDensity]).nice(); // We could clamp the scale and start the domain at a very small positive value, so log scales can be applied. Not necessary now because the data seems to be better reprensented with a symlog scale
-        }
-        color = scale(density);
-      }
-
-      return color;
     },
   },
 });
